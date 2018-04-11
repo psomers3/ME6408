@@ -11,7 +11,7 @@
 #include "UserInput.hpp"
 
 #define MaxNumofCars 1
-#define SENSORSAMPLINGFREQ 15 //Hz
+#define SENSORSAMPLINGFREQ 20 //Hz
 
 #define SERVOZERO 63.2 //degree position for straight wheels of servo
 #define SERVOLIMIT 30 //degrees of turn in each direction of servo

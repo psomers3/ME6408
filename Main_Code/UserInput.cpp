@@ -16,7 +16,6 @@ bool UserInput::user_connect()
     m_serial_port->write('x'); //send a test char to slave
     do
     {   
-        
         if(m_serial_port->available())
         {
             if (m_serial_port->read() == 'x')
@@ -54,7 +53,7 @@ int UserInput::update_input()
     if (m_communication_established)
     {
         m_serial_port->write('y');
-        delay(15);
+        //cdelay(15);
         if (m_serial_port->read() == 'y')
         {
           while (!buffer_full)

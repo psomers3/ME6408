@@ -55,7 +55,7 @@ void print_menu(char menu_selection, Serial_* serial_port)
   else serial_port->print("\n\r");
 
   serial_port->print("(f) Enter new integral gain");
-  serial_port->print("\n\r")
+  serial_port->print("\n\r");
   
   serial_port->print("(g) Enter new proportional gain");
   serial_port->print("\n\r");

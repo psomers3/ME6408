@@ -11,7 +11,7 @@
 #include <Arduino.h>
 #include "TimerFour.h"
 
-#define USERSAMPLINGFREQ 15 //Hz
+#define USERSAMPLINGFREQ 10 //Hz
 #define MaxNumofUsers 1
 
 class UserInput
