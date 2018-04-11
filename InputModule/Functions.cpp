@@ -54,10 +54,14 @@ void print_menu(char menu_selection, Serial_* serial_port)
   if(menu_selection == 5) serial_port->println(" <---");
   else serial_port->print("\n\r");
 
-  serial_port->print("(f) Enter new integral gain");
+  serial_port->print("(f) Position Controlled Straight Line");
+  if(menu_selection == 6) serial_port->println(" <---");
+  else serial_port->print("\n\r");
+
+  serial_port->print("(g) Enter new proportional gain");
   serial_port->print("\n\r");
   
-  serial_port->print("(g) Enter new proportional gain");
+  serial_port->print("(h) Enter new integral gain");
   serial_port->print("\n\r");
   
   serial_port->print("\nSelect Option From Above");

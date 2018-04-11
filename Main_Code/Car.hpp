@@ -26,8 +26,9 @@ enum class CarController : uint8_t
     CAR_IDLE = 0x00,
     DIRECT_DRIVE = 0x01,
     ZERO = 0x02,
-    ASSIST_1 = 0X03,
-    ASSIST_2 = 0X04
+    ASSIST_1 = 0x03,
+    ASSIST_2 = 0x04,
+    STRAIGHT_CONTROL = 0x05
 };
 
 
@@ -51,15 +52,20 @@ private:
     float m_speed;
     float m_percent_steer;
     float m_percent_speed;
-
-    float m_Kp; //proportional gain
-    float m_Ki; //integral gain    
-    float m_integral_error;  
-    void drive(float percent_speed);
     
+    float m_propogation_pointx;
+    float m_propogation_pointy;
+    float m_propogation_angle;
+    float m_tan_propogation_angle;
+    
+    float m_Kp; //proportional gain
+    float m_Ki; //integral gain
+    float m_integral_error;
+    void drive(float percent_speed);
     void update_yaw_rate();
     void update_speed();
-    void assist_controller_1(float kp,float ki);
+    void assist_controller(float kp,float ki, float desired);
+    void straight_line_control(float kp, float ki);
     float desired_hitch_angle();
     void update_control();
     void update_steering();
@@ -81,6 +87,7 @@ public:
     float get_steer_angle(); //this is used for the controller input calculation only
     void get_outputs(float* output_array);
     void zero();
+    void set_propogation_point();
     void set_gains(float kp, float ki);
 };
 

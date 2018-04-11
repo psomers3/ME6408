@@ -151,20 +151,32 @@ float Car::desired_hitch_angle()
               * (R/abs(R));
 }
 
-void Car::assist_controller_1(float Kp, float Ki)
+void Car::assist_controller(float Kp, float Ki, float desired)
 {
-    float desired = desired_hitch_angle();
     float error = desired - m_trailer->get_hitch_angle();
-    
     set_steering((error * Kp ) + m_integral_error * Ki * get_speed());
-
-    // Clamping anti-windup:  If control is saturated and error is same sign as
-    // integrated error, leave integrated error unchanged.
+    // Clamping anti-windup:
     if((abs(m_percent_speed) > 1) && (error * m_integral_error>0)){}
-    else
-    {
-        m_integral_error += error*(1/SENSORSAMPLINGFREQ);  // Update integral error
-    }
+    else m_integral_error += error*(1/SENSORSAMPLINGFREQ);  // Update integral error
+}
+
+void Car::straight_line_control(float kp, float ki)
+{
+    //Ki is used here as a proportional gain for the angle
+    float desired_ycoord = m_tan_propogation_angle*(m_trailer->get_xpos() - m_propogation_pointx)
+                      + m_propogation_pointy;
+    float pos_error = desired_ycoord - m_trailer->get_ypos();
+    float angle_error = m_propogation_angle - m_trailer->get_inertial_angle();
+    float input = pos_error * 0.5 + angle_error * -1.5;
+    assist_controller(kp,ki,input);
+}
+
+void Car::set_propogation_point()
+{
+    m_propogation_pointx = m_trailer->get_xpos();
+    m_propogation_pointy = m_trailer->get_ypos();
+    m_propogation_angle = m_trailer->get_inertial_angle();
+    m_tan_propogation_angle = tan(m_propogation_angle);
 }
 
 void Car::zero_integral_error()
@@ -194,7 +206,7 @@ void Car::update_control()
       case CarController::DIRECT_DRIVE:
         if(!m_steering.attached()) m_steering.attach(m_servo_pin);
         set_speed(m_input->get_velocity());
-        set_steering(m_input->get_steering());
+        set_steering(-m_input->get_steering());
         break;
       case CarController::ZERO:
         if(!m_steering.attached()) m_steering.attach(m_servo_pin);
@@ -204,12 +216,19 @@ void Car::update_control()
       case CarController::ASSIST_1:
         if(!m_steering.attached()) m_steering.attach(m_servo_pin);
         set_speed(m_input->get_velocity());
-        assist_controller_1(m_Kp,m_Ki); 
+        assist_controller(m_Kp,m_Ki,desired_hitch_angle()); 
         break;
       case CarController::ASSIST_2:
         if(!m_steering.attached()) m_steering.attach(m_servo_pin);
         set_speed(m_input->get_velocity());
-        assist_controller_1(m_input->get_kp(),m_input->get_ki()); 
+        assist_controller(m_input->get_kp(),m_input->get_ki(),desired_hitch_angle()); 
+        break;
+      case CarController::STRAIGHT_CONTROL:
+        //*** MAY NEED TO ZERO INTEGRAL CONTROL HERE WHEN SWITCHING CONTROLLERS******
+        if(!m_steering.attached()) m_steering.attach(m_servo_pin);
+        set_speed(m_input->get_velocity());
+        if(get_input_radius()>100) straight_line_control(m_input->get_kp(),m_input->get_ki());
+        else assist_controller(m_input->get_kp(),m_input->get_ki(),desired_hitch_angle());
         break;
   }
 }

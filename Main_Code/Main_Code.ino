@@ -31,7 +31,6 @@ float output[6];
 
 void setup() 
 {
-  Serial.begin(57600);
   Serial3.begin(57600);
   car.initialize();
   Driver.start_user_input(); //starts timer4 for sampling user input
@@ -70,6 +69,11 @@ void loop()
           case 5: //user input gain controller
             car.zero_integral_error();
             car.set_controller(CarController::ASSIST_2);
+            last_state = state;
+            break;
+          case 6: //user input gain controller
+            car.zero_integral_error();
+            car.set_controller(CarController::STRAIGHT_CONTROL);
             last_state = state;
             break;
           default:

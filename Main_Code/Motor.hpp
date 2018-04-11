@@ -4,14 +4,13 @@
 #define Motor_hpp
 #include <Arduino.h>
 
-#define MAXPWM 0.12
+#define MAXPWM 0.5
 
 class Motor
 {
 private:
     uint8_t m_pwm_pin;
     uint8_t m_dir_pin;
-    
 
 public:
     //constructor

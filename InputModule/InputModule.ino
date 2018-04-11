@@ -48,10 +48,10 @@ void loop()
       switch (input)
       {
           case 'i':
-              if(data[0] < 1) data[0] += 1;
+              if(data[0] < 1) data[0] += 0.05;
               break;
           case 'k':
-              if(data[0] > 0) data[0] -= 1;
+              if(data[0] > -1) data[0] -= 0.05;
               break;
           case 'a': //idle
               state = 1;
@@ -70,12 +70,15 @@ void loop()
           case 'e': //User input controller
               state = 5;
               break;
+          case 'f': //User input controller
+              state = 6;
+              break;
           case 'g':
               entering_new_kp = true;
               Serial.print("\r\n\nEnter new kp gain: ");
               refresh_menu = false;
               break;
-          case 'f':
+          case 'h':
               entering_new_ki = true;
               Serial.print("\r\n\nEnter new ki gain: ");
               refresh_menu = false;
