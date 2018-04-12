@@ -90,7 +90,11 @@ void Car::update_yaw_rate()
 
 void Car::update_speed()
 {
-    drive(m_percent_speed);
+    float error = m_speed - get_speed();
+    drive((error * 0.5 ) + m_integral_speed_error * 0.5);
+    // Clamping anti-windup:
+    if((abs(m_speed) > MAXSPEED) && (error * m_integral_speed_error>0)){}
+    else m_integral_speed_error += error*(1/SENSORSAMPLINGFREQ);  // Update integral error
 }
 
 void Car::initialize()
@@ -107,7 +111,7 @@ void Car::set_controller(CarController controller)
 
 void Car::set_speed(float percent_speed)
 {
-    m_percent_speed = percent_speed;
+    m_speed = percent_speed * MAXSPEED;
 }
 
 float Car::get_input_radius()
@@ -156,7 +160,7 @@ void Car::assist_controller(float Kp, float Ki, float desired)
     float error = desired - m_trailer->get_hitch_angle();
     set_steering((error * Kp ) + m_integral_error * Ki * get_speed());
     // Clamping anti-windup:
-    if((abs(m_percent_speed) > 1) && (error * m_integral_error>0)){}
+    if((abs(m_percent_steer) > 1) && (error * m_integral_error>0)){}
     else m_integral_error += error*(1/SENSORSAMPLINGFREQ);  // Update integral error
 }
 
@@ -182,6 +186,7 @@ void Car::set_propogation_point()
 void Car::zero_integral_error()
 {
     m_integral_error = 0;
+    m_integral_speed_error = 0;
 }
 
 void Car::zero()

@@ -71,7 +71,7 @@ void loop()
             car.set_controller(CarController::ASSIST_2);
             last_state = state;
             break;
-          case 6: //user input gain controller
+          case 6: //position control
             car.zero_integral_error();
             car.set_controller(CarController::STRAIGHT_CONTROL);
             last_state = state;

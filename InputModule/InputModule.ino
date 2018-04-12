@@ -11,7 +11,7 @@ bool entering_new_kp = false;
 bool entering_new_ki = false;
 bool refresh_menu = true;
 //data[velocity,steering,state,kp,ki]
-float data[]= {0,0,0,0,0.25};
+float data[]= {0,0,0,0,0};
 String kp_gain = "";
 String ki_gain = "";
 uint8_t gain_index = 0;

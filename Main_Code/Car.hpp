@@ -21,6 +21,8 @@
 #define MAXRADIUS 5.0 //maximum trailer radius before assuming straight
 #define STEERSTRAIGHT 0.1 //percent steering input corresponding to switch to infinite radius
 
+#define MAXSPEED 0.5 // meters/sec
+
 enum class CarController : uint8_t
 {
     CAR_IDLE = 0x00,
@@ -51,7 +53,6 @@ private:
     float m_yaw_rate;
     float m_speed;
     float m_percent_steer;
-    float m_percent_speed;
     
     float m_propogation_pointx;
     float m_propogation_pointy;
@@ -61,6 +62,8 @@ private:
     float m_Kp; //proportional gain
     float m_Ki; //integral gain
     float m_integral_error;
+    float m_integral_speed_error;
+    
     void drive(float percent_speed);
     void update_yaw_rate();
     void update_speed();
