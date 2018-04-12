@@ -31,6 +31,7 @@ float output[6];
 
 void setup() 
 {
+  Serial.begin(57600);
   Serial3.begin(57600);
   car.initialize();
   Driver.start_user_input(); //starts timer4 for sampling user input
@@ -52,11 +53,13 @@ void loop()
             last_state = state;
             break;
           case 2: //zero's states and detaches servo
+            car.zero_integral_error();
             car.set_controller(CarController::CAR_IDLE);
             car.zero();
             last_state = state;
             break;
           case 3: //direct drive controller
+            car.zero_integral_error();
             car.set_controller(CarController::DIRECT_DRIVE);
             last_state = state;
             break;
@@ -71,7 +74,7 @@ void loop()
             car.set_controller(CarController::ASSIST_2);
             last_state = state;
             break;
-          case 6: //position control
+          case 6: //position control straight line
             car.zero_integral_error();
             car.set_controller(CarController::STRAIGHT_CONTROL);
             last_state = state;

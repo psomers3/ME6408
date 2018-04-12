@@ -58,11 +58,13 @@ float Car::get_speed()
     float h_angle = m_trailer -> get_hitch_angle();
     float l = m_trailer -> get_hitch_dist();
     float l_two = m_hitch_dist;
-    float trailer_vel = m_trailer->get_velocity();
+    float trailer_vel = -m_trailer->get_velocity();
     
-    float velx = m_trailer->get_velocity()*cos(h_angle) + omega_t * l * sin(h_angle);
+    float velx = trailer_vel*cos(h_angle) + omega_t * l * sin(h_angle);
     float vely = -trailer_vel*sin(h_angle) + omega_t*l*cos(h_angle) - omega_c*l_two;
-    return sqrt(sq(velx) + sq(vely));
+    
+    if(trailer_vel < 0) return -sqrt(sq(velx) + sq(vely));
+    else return sqrt(sq(velx) + sq(vely));
 }
 
 float Car::get_steer_angle()
@@ -91,10 +93,15 @@ void Car::update_yaw_rate()
 void Car::update_speed()
 {
     float error = m_speed - get_speed();
-    drive((error * 0.5 ) + m_integral_speed_error * 0.5);
+    float drive_input = (error * -5 ) + m_integral_speed_error * -10;
+     
+    drive(drive_input);
     // Clamping anti-windup:
-    if((abs(m_speed) > MAXSPEED) && (error * m_integral_speed_error>0)){}
-    else m_integral_speed_error += error*(1/SENSORSAMPLINGFREQ);  // Update integral error
+    if((abs(drive_input) > .5) && (error * m_integral_speed_error>0)){}
+    else 
+    {
+      m_integral_speed_error += error*(1./SENSORSAMPLINGFREQ);  // Update integral error
+    }
 }
 
 void Car::initialize()
@@ -161,7 +168,7 @@ void Car::assist_controller(float Kp, float Ki, float desired)
     set_steering((error * Kp ) + m_integral_error * Ki * get_speed());
     // Clamping anti-windup:
     if((abs(m_percent_steer) > 1) && (error * m_integral_error>0)){}
-    else m_integral_error += error*(1/SENSORSAMPLINGFREQ);  // Update integral error
+    else m_integral_error += error*(1./SENSORSAMPLINGFREQ);  // Update integral error
 }
 
 void Car::straight_line_control(float kp, float ki)
@@ -186,7 +193,7 @@ void Car::set_propogation_point()
 void Car::zero_integral_error()
 {
     m_integral_error = 0;
-    m_integral_speed_error = 0;
+    //m_integral_speed_error = 0;
 }
 
 void Car::zero()
