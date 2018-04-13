@@ -58,7 +58,7 @@ float Car::get_speed()
     float h_angle = m_trailer -> get_hitch_angle();
     float l = m_trailer -> get_hitch_dist();
     float l_two = m_hitch_dist;
-    float trailer_vel = -m_trailer->get_velocity();
+    float trailer_vel = m_trailer->get_velocity();
     
     float velx = trailer_vel*cos(h_angle) + omega_t * l * sin(h_angle);
     float vely = -trailer_vel*sin(h_angle) + omega_t*l*cos(h_angle) - omega_c*l_two;

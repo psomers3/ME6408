@@ -37,7 +37,7 @@ float Trailer::get_yaw_rate()
 float Trailer::get_velocity()
 {
   //this has a minus because the wheels are spinning opposite directions to go forward
-    return ((m_LWheel->get_velocity() - m_RWheel->get_velocity())/2) * (m_wheel_dia/2); 
+    return -((m_LWheel->get_velocity() - m_RWheel->get_velocity())/2) * (m_wheel_dia/2); 
 }
 
 void Trailer::update_trailer(float freq)

@@ -124,7 +124,7 @@ float UserInput::get_steering()
 
 float UserInput::get_velocity()
 {
-    return m_velocity_input;
+    return -m_velocity_input;
 }
 
 uint8_t UserInput::get_mode()

@@ -11,7 +11,7 @@ AngleSensor RWheel(2,27);       // Encoder 3
 UserInput Driver(&Serial2,57600);
 Trailer trailer(  .1463, // track width
                   .225, // hitch dist
-                  .05842, // wheel dia
+                  .060325, // wheel dia
                   &HitchSensor,
                   &LWheel,
                   &RWheel);
