@@ -11,7 +11,7 @@
 #include "UserInput.hpp"
 
 #define MaxNumofCars 1
-#define SENSORSAMPLINGFREQ 20 //Hz
+#define SENSORSAMPLINGFREQ 30 //Hz
 
 #define SERVOZERO 63.2 //degree position for straight wheels of servo
 #define SERVOLIMIT 30 //degrees of turn in each direction of servo
@@ -22,6 +22,7 @@
 #define STEERSTRAIGHT 0.1 //percent steering input corresponding to switch to infinite radius
 
 #define MAXSPEED 0.5 // meters/sec
+#define MAXHITCHANGLE 0.261799 // 15 degrees in radians
 
 enum class CarController : uint8_t
 {
@@ -62,6 +63,8 @@ private:
     float m_Kp; //proportional gain
     float m_Ki; //integral gain
     float m_integral_error;
+    float m_integral_pos_error;
+    float m_integral_yaw_error;
     float m_integral_speed_error;
     
     void drive(float percent_speed);

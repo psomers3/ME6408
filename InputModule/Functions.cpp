@@ -58,12 +58,26 @@ void print_menu(char menu_selection, Serial_* serial_port)
   if(menu_selection == 6) serial_port->println(" <---");
   else serial_port->print("\n\r");
 
-  serial_port->print("(g) Enter new proportional gain");
+  serial_port->print("(g) Enter new proportional hitch gain");
   serial_port->print("\n\r");
   
-  serial_port->print("(h) Enter new integral gain");
+  serial_port->print("(h) Enter new integral hitch gain");
+  serial_port->print("\n\r");
+
+  serial_port->print("(m) Enter new proportional position gain");
+  serial_port->print("\n\r");
+
+  serial_port->print("(n) Enter new integral position gain");
+  serial_port->print("\n\r");
+
+  serial_port->print("(o) Enter new proportional yaw gain");
+  serial_port->print("\n\r");
+
+  serial_port->print("(p) Enter new integral yaw gain");
   serial_port->print("\n\r");
   
+  serial_port->print("(q) Print current gain values");
+  serial_port->print("\n\r");
   serial_port->print("\nSelect Option From Above");
 }
 

@@ -164,6 +164,8 @@ float Car::desired_hitch_angle()
 
 void Car::assist_controller(float Kp, float Ki, float desired)
 {
+    if (abs(desired) > MAXHITCHANGLE) desired = (desired/abs(desired))*MAXHITCHANGLE;
+     
     float error = desired - m_trailer->get_hitch_angle();
     set_steering((error * Kp ) + m_integral_error * Ki * get_speed());
     // Clamping anti-windup:
@@ -178,8 +180,17 @@ void Car::straight_line_control(float kp, float ki)
                       + m_propogation_pointy;
     float pos_error = desired_ycoord - m_trailer->get_ypos();
     float angle_error = m_propogation_angle - m_trailer->get_inertial_angle();
-    float input = pos_error * 0.5 + angle_error * -1.5;
+    float input = pos_error * m_input->get_kp_pos() + angle_error * m_input->get_kp_yaw()
+                  + m_integral_pos_error * m_input->get_ki_pos()*get_speed()
+                  + m_integral_yaw_error * m_input->get_ki_yaw()*get_speed();              
     assist_controller(kp,ki,input);
+    
+    //Anti-windup for integral controls
+    if((abs(input) > MAXHITCHANGLE) && (pos_error * m_integral_pos_error>0)){}
+    else m_integral_pos_error += pos_error*(1./SENSORSAMPLINGFREQ);  // Update integral error
+    if((abs(input) > MAXHITCHANGLE) && (angle_error * m_integral_yaw_error>0)){}
+    else m_integral_yaw_error += angle_error*(1./SENSORSAMPLINGFREQ);  // Update integral error
+    
 }
 
 void Car::set_propogation_point()
@@ -193,7 +204,9 @@ void Car::set_propogation_point()
 void Car::zero_integral_error()
 {
     m_integral_error = 0;
-    //m_integral_speed_error = 0;
+    m_integral_pos_error = 0;
+    m_integral_yaw_error = 0;
+    m_integral_speed_error = 0;
 }
 
 void Car::zero()

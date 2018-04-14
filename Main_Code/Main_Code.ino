@@ -9,9 +9,9 @@ AngleSensor HitchSensor(19,23); // Encoder 1
 AngleSensor LWheel(18,25);      // Encoder 2
 AngleSensor RWheel(2,27);       // Encoder 3
 UserInput Driver(&Serial2,57600);
-Trailer trailer(  .1463, // track width
+Trailer trailer(  .150, // track width
                   .225, // hitch dist
-                  .060325, // wheel dia
+                  .0587, // wheel dia
                   &HitchSensor,
                   &LWheel,
                   &RWheel);
@@ -31,7 +31,6 @@ float output[6];
 
 void setup() 
 {
-  Serial.begin(57600);
   Serial3.begin(57600);
   car.initialize();
   Driver.start_user_input(); //starts timer4 for sampling user input
@@ -65,7 +64,7 @@ void loop()
             break;
           case 4: //default gain controller 
             car.zero_integral_error();
-            car.set_gains(0.5,0.25);
+            car.set_gains(4,-3);
             car.set_controller(CarController::ASSIST_1);
             last_state = state;
             break;

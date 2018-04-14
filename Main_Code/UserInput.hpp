@@ -29,7 +29,10 @@ private:
     uint8_t m_mode;
     float m_kp;
     float m_ki;
-    
+    float m_kp_pos;
+    float m_ki_pos;
+    float m_kp_yaw;
+    float m_ki_yaw;
 public:
     UserInput(HardwareSerial* serial_port, uint16_t baudrate);
     //~UserInput();
@@ -42,6 +45,10 @@ public:
     static void input_updating();
     float get_kp();
     float get_ki();
+    float get_kp_pos();
+    float get_ki_pos();
+    float get_kp_yaw();
+    float get_ki_yaw();
     
 };
 

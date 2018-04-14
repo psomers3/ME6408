@@ -1,5 +1,7 @@
 #include "UserInput.hpp"
 
+#define NUMBYTES 9
+
 uint8_t UserInput::m_num_users = 0;
 UserInput* UserInput::m_user_ptrs[MaxNumofUsers];
 
@@ -42,7 +44,7 @@ bool UserInput::user_connect()
 
 int UserInput::update_input()
 {
-    uint8_t buff[22]; // 5 float values + \n chars
+    uint8_t buff[NUMBYTES*4 + 2]; // 5 float values + \n chars
     bool buffer_full = false;
     uint8_t index = 0;
     
@@ -53,29 +55,32 @@ int UserInput::update_input()
     if (m_communication_established)
     {
         m_serial_port->write('y');
-        //cdelay(15);
         if (m_serial_port->read() == 'y')
         {
           while (!buffer_full)
           {   
               if (m_serial_port->available())
               {
-                  for (int i = 0;i<22;i++)
+                  for (int i = 0;i<NUMBYTES*4+2;i++)
                   {
                     buff[i] = m_serial_port->read();
                     index++;
                   }
               }
-              if (index == 22) buffer_full = true;
+              if (index == NUMBYTES*4+2) buffer_full = true;
           }
           
-          if (buff[0] == '\n' && buff[21] == '\n')
+          if (buff[0] == '\n' && buff[NUMBYTES*4+1] == '\n')
           {
               m_velocity_input = *reinterpret_cast<float*>(&buff[1]);
               m_steering_input = *reinterpret_cast<float*>(&buff[5]);
               m_mode = (uint8_t)*reinterpret_cast<float*>(&buff[9]);
               m_kp = *reinterpret_cast<float*>(&buff[13]);
               m_ki = *reinterpret_cast<float*>(&buff[17]);
+              m_kp_pos = *reinterpret_cast<float*>(&buff[21]);
+              m_ki_pos = *reinterpret_cast<float*>(&buff[25]);
+              m_kp_yaw = *reinterpret_cast<float*>(&buff[29]);
+              m_ki_yaw = *reinterpret_cast<float*>(&buff[33]);
               return 0; //successfully updated values
           }
           else
@@ -85,6 +90,7 @@ int UserInput::update_input()
         }
         else
         {
+          while (m_serial_port->available()) {m_serial_port->read();}
           return 3;// didn't read echo properly
         }
     }
@@ -146,4 +152,19 @@ float UserInput::get_ki()
 {
     return m_ki; 
 }
-
+float UserInput::get_kp_pos()
+{
+    return m_kp_pos; 
+}
+float UserInput::get_ki_pos()
+{
+    return m_ki_pos; 
+}
+float UserInput::get_kp_yaw()
+{
+    return m_kp_yaw; 
+}
+float UserInput::get_ki_yaw()
+{
+    return m_ki_yaw; 
+}
