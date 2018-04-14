@@ -16,9 +16,11 @@ void transmit(float* data_to_send, uint8_t num_values, SoftwareSerial* BTSerial)
 float get_input(uint8_t pot_pin)
 {
     float val;
-    
-    val = analogRead(pot_pin);
+    int8_t offset = -50;
+    val = analogRead(pot_pin)+offset;
 
+    if(val > 1024) val = 1024;
+    if(val< 0) val = 0;
     // This code sets the potentiometer from -1 to 1
     val = (val - 512)/512;
     // This if statement evaluates for cases < -0.1; > 0.1 and infinite cases(straight line)

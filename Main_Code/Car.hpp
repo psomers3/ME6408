@@ -13,12 +13,12 @@
 #define MaxNumofCars 1
 #define SENSORSAMPLINGFREQ 30 //Hz
 
-#define SERVOZERO 63.2 //degree position for straight wheels of servo
-#define SERVOLIMIT 30 //degrees of turn in each direction of servo
+#define SERVOZERO 65//63.2 //degree position for straight wheels of servo
+#define SERVOLIMIT 33 //degrees of turn in each direction of servo
 #define MAXSTEERANGLE 33 //actual steering limit of the tires
 
-#define MINRADIUS 1.0 //minimun trailer radius (meters)
-#define MAXRADIUS 5.0 //maximum trailer radius before assuming straight
+#define MINRADIUS 2 //minimun trailer radius (meters)
+#define MAXRADIUS 5 //maximum trailer radius before assuming straight
 #define STEERSTRAIGHT 0.1 //percent steering input corresponding to switch to infinite radius
 
 #define MAXSPEED 0.5 // meters/sec
@@ -66,6 +66,7 @@ private:
     float m_integral_pos_error;
     float m_integral_yaw_error;
     float m_integral_speed_error;
+    float m_last_steering_sample;
     
     void drive(float percent_speed);
     void update_yaw_rate();

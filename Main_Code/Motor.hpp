@@ -4,7 +4,7 @@
 #define Motor_hpp
 #include <Arduino.h>
 
-#define MAXPWM 0.5
+#define MAXPWM 0.75
 
 class Motor
 {

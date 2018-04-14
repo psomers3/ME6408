@@ -16,7 +16,7 @@ bool entering_new_ki_yaw = false;
 
 bool refresh_menu = true;
 //data[velocity,steering,state,kp,ki,kp_pos,kp_yaw,ki_pos,ki_yaw]
-float data[]= {0,0,0,0,0,0,0,0,0};
+float data[]= {0,0,0,5,-3,-3,0,-1.5,0};
 String new_gain = "";
 
 uint8_t gain_index = 0;
@@ -53,11 +53,11 @@ void loop()
       switch (input)
       {
           case 'i':
-              if(data[0] < 1) data[0] += 0.05;
+              if(data[0] < 1) data[0] += 0.1;
               refresh_menu = true;
               break;
           case 'k':
-              if(data[0] > -1) data[0] -= 0.05;
+              if(data[0] > -1) data[0] -= 0.1;
               refresh_menu = true;
               break;
           case 'a': //idle

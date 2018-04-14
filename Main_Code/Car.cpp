@@ -128,11 +128,11 @@ float Car::get_input_radius()
   
   if (steering_percentage < -STEERSTRAIGHT)
   {
-      radius = (((-steering_percentage - MINRADIUS)/(1-STEERSTRAIGHT))*(MAXRADIUS-MINRADIUS)) - MINRADIUS;
+      radius = (((-steering_percentage - 1)/(1-STEERSTRAIGHT))*(MAXRADIUS-MINRADIUS)) - MINRADIUS;
   }
   else if (steering_percentage > STEERSTRAIGHT)
   {
-      radius = -(((steering_percentage - MINRADIUS)/(1-STEERSTRAIGHT))*(MAXRADIUS-MINRADIUS)) + MINRADIUS;
+      radius = -(((steering_percentage - 1)/(1-STEERSTRAIGHT))*(MAXRADIUS-MINRADIUS)) + MINRADIUS;
   }
   else
   {
@@ -231,7 +231,7 @@ void Car::update_control()
       case CarController::DIRECT_DRIVE:
         if(!m_steering.attached()) m_steering.attach(m_servo_pin);
         set_speed(m_input->get_velocity());
-        set_steering(-m_input->get_steering());
+        set_steering(m_input->get_steering());
         break;
       case CarController::ZERO:
         if(!m_steering.attached()) m_steering.attach(m_servo_pin);
@@ -252,7 +252,15 @@ void Car::update_control()
         //*** MAY NEED TO ZERO INTEGRAL CONTROL HERE WHEN SWITCHING CONTROLLERS******
         if(!m_steering.attached()) m_steering.attach(m_servo_pin);
         set_speed(m_input->get_velocity());
-        if(get_input_radius()>100) straight_line_control(m_input->get_kp(),m_input->get_ki());
+        if(get_input_radius()>100) 
+        {
+          if(m_last_steering_sample != m_input->get_steering())
+          {
+            zero_integral_error();
+            set_propogation_point();
+          }
+          straight_line_control(m_input->get_kp(),m_input->get_ki());
+        }
         else assist_controller(m_input->get_kp(),m_input->get_ki(),desired_hitch_angle());
         break;
   }
