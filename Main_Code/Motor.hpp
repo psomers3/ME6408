@@ -23,7 +23,7 @@ public:
 
     /// Drives the Motor at specific speed and direction
     /**
-     * This function will drive the motor at the percent full speed according to duty_cycle. The motor will 
+     * This function will drive the motor at a percentage of full speed according to duty_cycle. The motor will 
      * reverse directions depending on the sign of duty_cyle
      * @param The duty cycle 
      */

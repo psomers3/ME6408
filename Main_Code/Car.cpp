@@ -32,7 +32,11 @@ void Car::drive(float percent_speed)
 
 void Car::set_steering(float percent_steer)
 {
-  m_percent_steer = percent_steer;
+  if (percent_steer < -1 || percent_steer > 1)
+  {
+    m_percent_steer = percent_steer / abs(percent_steer);
+  }
+  else m_percent_steer = percent_steer;
 }
 
 void Car::update_steering()
@@ -60,8 +64,8 @@ float Car::get_speed()
   float l_two = m_hitch_dist;
   float trailer_vel = m_trailer->get_velocity();
 
-  float velx = trailer_vel * cos(h_angle) + omega_t * l * sin(h_angle);
-  float vely = -trailer_vel * sin(h_angle) + omega_t*l * cos(h_angle) - omega_c * l_two;
+  float velx =  trailer_vel * cos(h_angle) + omega_t * l * sin(h_angle);
+  float vely = -trailer_vel * sin(h_angle) + omega_t * l * cos(h_angle) - omega_c * l_two;
 
   if (trailer_vel < 0) return -sqrt(sq(velx) + sq(vely));
   else return sqrt(sq(velx) + sq(vely));
@@ -144,7 +148,7 @@ void Car::get_outputs(float* output_array)
   output_array[3] = m_trailer->get_hitch_angle();
   output_array[4] = get_speed();
   output_array[5] = get_input_radius();
-  output_array[6] = m_input->get_steering();
+  output_array[6] = m_percent_steer;
 }
 
 float Car::desired_hitch_angle()
@@ -165,7 +169,7 @@ void Car::assist_controller(float Kp, float Ki, float desired)
   float error = desired - m_trailer->get_hitch_angle();
   set_steering((error * Kp ) + m_integral_error * Ki * get_speed());
   // Clamping anti-windup:
-  if ((abs(m_percent_steer) > 1) && (error * m_integral_error > 0)) {}
+  if ((abs(m_percent_steer) >= 1) && (error * m_integral_error > 0)) {}
   else m_integral_error += error * (1. / SENSORSAMPLINGFREQ); // Update integral error
 }
 

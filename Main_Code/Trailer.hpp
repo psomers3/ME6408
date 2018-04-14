@@ -27,6 +27,13 @@ private:
     float m_ypos;
     
 public:
+    /// Constructor
+    /**
+     * Creates a Trailer object
+     * @param track_width The track width from center of wheel to center of wheel in meters
+     * @param hitch_to_axle The longitudnal distance from the trailer axle to the center of the hitch in meters
+     * @param wheel_dia outer diameter of the trailer wheels in meters
+     */
     Trailer(float track_width,float hitch_to_axle,float wheel_dia, AngleSensor* hitch, AngleSensor* LWheel, AngleSensor* RWheel);
 
     static void update_trailer(float freq);
