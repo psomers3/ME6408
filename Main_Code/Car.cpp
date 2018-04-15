@@ -226,7 +226,7 @@ void Car::update_control()
     case CarController::DIRECT_DRIVE:
       if (!m_steering.attached()) m_steering.attach(m_servo_pin);
       set_speed(m_input->get_velocity());
-      set_steering(m_input->get_steering());
+      set_steering(-m_input->get_steering());
       break;
     case CarController::ZERO:
       if (!m_steering.attached()) m_steering.attach(m_servo_pin);
