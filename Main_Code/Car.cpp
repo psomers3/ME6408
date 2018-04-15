@@ -41,10 +41,6 @@ void Car::set_steering(float percent_steer)
 
 void Car::update_steering()
 {
-  if (m_percent_steer < -1 && m_percent_steer > 1)
-  {
-    m_percent_steer = m_percent_steer / abs(m_percent_steer);
-  }
   float angle = m_percent_steer * SERVOLIMIT;
   angle += SERVOZERO;
   m_steering.write(angle);
@@ -175,7 +171,6 @@ void Car::assist_controller(float Kp, float Ki, float desired)
 
 void Car::straight_line_control(float kp, float ki)
 {
-  //Ki is used here as a proportional gain for the angle
   float desired_ycoord = m_tan_propogation_angle * (m_trailer->get_xpos() - m_propogation_pointx)
                          + m_propogation_pointy;
   float pos_error = desired_ycoord - m_trailer->get_ypos();
@@ -249,16 +244,16 @@ void Car::update_control()
       assist_controller(m_input->get_kp(), m_input->get_ki(), desired_hitch_angle());
       break;
     case CarController::STRAIGHT_CONTROL:
-      //*** MAY NEED TO ZERO INTEGRAL CONTROL HERE WHEN SWITCHING CONTROLLERS******
       if (!m_steering.attached()) m_steering.attach(m_servo_pin);
       set_speed(m_input->get_velocity());
       if (get_input_radius() > 100)
       {
-        if (m_last_steering_sample != m_input->get_steering())
+        if (m_last_steering_sample != get_input_radius())
         {
           zero_integral_error();
           set_propogation_point();
         }
+        m_last_steering_sample = get_input_radius();
         straight_line_control(m_input->get_kp(), m_input->get_ki());
       }
       else assist_controller(m_input->get_kp(), m_input->get_ki(), desired_hitch_angle());

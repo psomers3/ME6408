@@ -75,6 +75,7 @@ void loop()
             break;
           case 6: //position control straight line
             car.zero_integral_error();
+            car.set_propogation_point();
             car.set_controller(CarController::STRAIGHT_CONTROL);
             last_state = state;
             break;
