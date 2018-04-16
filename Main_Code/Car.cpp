@@ -253,10 +253,11 @@ void Car::update_control()
           zero_integral_error();
           set_propogation_point();
         }
-        m_last_steering_sample = get_input_radius();
         straight_line_control(m_input->get_kp(), m_input->get_ki());
       }
       else assist_controller(m_input->get_kp(), m_input->get_ki(), desired_hitch_angle());
+      
+      m_last_steering_sample = get_input_radius();
       break;
   }
 }
