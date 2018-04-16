@@ -8,10 +8,8 @@ void transmit(float* data_to_send, uint8_t num_values, HardwareSerial* SerialDev
     for (int i = 0;i<num_bytes;i++)
     {
         SerialDevice->write(*(data_ptr + i));
-        //Serial3.write(*(data_ptr + i));
     }
     SerialDevice->write('\n');
-        //Serial3.write('\n');
 }
 
 float get_input(uint8_t pot_pin)

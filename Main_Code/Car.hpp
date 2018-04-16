@@ -67,6 +67,7 @@ private:
     float m_integral_yaw_error;
     float m_integral_speed_error;
     float m_last_steering_sample;
+    float m_required_hitch_angle;
 
     /// Drives the Car object motor
     /**

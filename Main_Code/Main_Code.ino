@@ -27,7 +27,7 @@ Car car(6, //steering servo signal pin
 
 uint8_t state = 1;
 uint8_t last_state = 100;
-float output[7];
+float output[8];
 
 void setup() 
 {
@@ -86,7 +86,7 @@ void loop()
 
   //transmit data to Simulink
   car.get_outputs(output);
-  transmit(output,7,&Serial3);
+  transmit(output,8,&Serial3);
 } 
 
 

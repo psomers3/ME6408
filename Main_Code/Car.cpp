@@ -145,6 +145,7 @@ void Car::get_outputs(float* output_array)
   output_array[4] = get_speed();
   output_array[5] = get_input_radius();
   output_array[6] = m_percent_steer;
+  output_array[7] = m_required_hitch_angle;
 }
 
 float Car::desired_hitch_angle()
@@ -175,15 +176,15 @@ void Car::straight_line_control(float kp, float ki)
                          + m_propogation_pointy;
   float pos_error = desired_ycoord - m_trailer->get_ypos();
   float angle_error = m_propogation_angle - m_trailer->get_inertial_angle();
-  float input = pos_error * m_input->get_kp_pos() + angle_error * m_input->get_kp_yaw()
+  m_required_hitch_angle = pos_error * m_input->get_kp_pos() + angle_error * m_input->get_kp_yaw()
                 + m_integral_pos_error * m_input->get_ki_pos() * get_speed()
                 + m_integral_yaw_error * m_input->get_ki_yaw() * get_speed();
-  assist_controller(kp, ki, input);
+  assist_controller(kp, ki, m_required_hitch_angle);
 
   //Anti-windup for integral controls
-  if ((abs(input) > MAXHITCHANGLE) && (pos_error * m_integral_pos_error > 0)) {}
+  if ((abs(m_required_hitch_angle) > MAXHITCHANGLE) && (pos_error * m_integral_pos_error > 0)) {}
   else m_integral_pos_error += pos_error * (1. / SENSORSAMPLINGFREQ); // Update integral error
-  if ((abs(input) > MAXHITCHANGLE) && (angle_error * m_integral_yaw_error > 0)) {}
+  if ((abs(m_required_hitch_angle) > MAXHITCHANGLE) && (angle_error * m_integral_yaw_error > 0)) {}
   else m_integral_yaw_error += angle_error * (1. / SENSORSAMPLINGFREQ); // Update integral error
 
 }
@@ -236,12 +237,14 @@ void Car::update_control()
     case CarController::ASSIST_1:
       if (!m_steering.attached()) m_steering.attach(m_servo_pin);
       set_speed(m_input->get_velocity());
-      assist_controller(m_Kp, m_Ki, desired_hitch_angle());
+      m_required_hitch_angle = desired_hitch_angle();
+      assist_controller(m_Kp, m_Ki, m_required_hitch_angle);
       break;
     case CarController::ASSIST_2:
       if (!m_steering.attached()) m_steering.attach(m_servo_pin);
       set_speed(m_input->get_velocity());
-      assist_controller(m_input->get_kp(), m_input->get_ki(), desired_hitch_angle());
+      m_required_hitch_angle = desired_hitch_angle();
+      assist_controller(m_input->get_kp(), m_input->get_ki(), m_required_hitch_angle);
       break;
     case CarController::STRAIGHT_CONTROL:
       if (!m_steering.attached()) m_steering.attach(m_servo_pin);
@@ -255,7 +258,11 @@ void Car::update_control()
         }
         straight_line_control(m_input->get_kp(), m_input->get_ki());
       }
-      else assist_controller(m_input->get_kp(), m_input->get_ki(), desired_hitch_angle());
+      else 
+      {
+        m_required_hitch_angle = desired_hitch_angle();
+        assist_controller(m_input->get_kp(), m_input->get_ki(), m_required_hitch_angle);
+      }
       
       m_last_steering_sample = get_input_radius();
       break;
