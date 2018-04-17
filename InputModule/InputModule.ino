@@ -31,8 +31,8 @@ void setup()
  
 void loop()
 {
-  data[1] = get_input(POTPIN);
-  get_velocity_input(VELPIN);
+  data[1] = -get_input(POTPIN);
+  data[0] = get_velocity_input(VELPIN);
   if (BTSerial.available())
   {
       received = BTSerial.read();
