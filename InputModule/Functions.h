@@ -11,6 +11,6 @@
 #include <SoftwareSerial.h>
 void transmit(float* data_to_send, uint8_t num_values, SoftwareSerial* BTSerial);
 float get_input(uint8_t pot_pin);
-
+float get_velocity_input(uint8_t vel_pin);
 void print_menu(char menu_selection, Serial_* serial_port);
 #endif /* Functions_h */

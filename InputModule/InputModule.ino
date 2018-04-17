@@ -2,8 +2,8 @@
 #include <SoftwareSerial.h>
 
 SoftwareSerial BTSerial(8, 9); // RX | TX
-#define POTPIN 5  //potentiometer input pin
-#define VELPIN 4
+#define POTPIN 1  //potentiometer input pin
+#define VELPIN 0
 char received;
 char input = 'a';
 char state = 1; //state of vehicle
@@ -32,7 +32,7 @@ void setup()
 void loop()
 {
   data[1] = get_input(POTPIN);
-  
+  get_velocity_input(VELPIN);
   if (BTSerial.available())
   {
       received = BTSerial.read();

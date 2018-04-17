@@ -13,10 +13,27 @@ void transmit(float* data_to_send, uint8_t num_values, SoftwareSerial* BTSerial)
     BTSerial->write('\n');
 }
 
+float get_velocity_input(uint8_t vel_pin)
+{   
+    int8_t offset = 0;
+    float val = analogRead(vel_pin) + offset;
+ 
+    if(val > 1024) val = 1024;
+    if(val< 0) val = 0;
+    // This code sets the potentiometer from -1 to 1
+    val = (val - 512)/512;
+    
+    if (val < -0.5) return -0.3;
+    else if(val >0.5) return 0.3;
+    else  return 0;
+
+    
+}
+
 float get_input(uint8_t pot_pin)
 {
     float val;
-    int8_t offset = -50;
+    int8_t offset = 40;
     val = analogRead(pot_pin)+offset;
 
     if(val > 1024) val = 1024;
