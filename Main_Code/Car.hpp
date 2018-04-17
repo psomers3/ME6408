@@ -17,7 +17,7 @@
 #define SERVOLIMIT 33 //degrees of turn in each direction of servo
 #define MAXSTEERANGLE 33 //actual steering limit of the tires
 
-#define MINRADIUS 2 //minimun trailer radius (meters)
+#define MINRADIUS 1 //minimun trailer radius (meters)
 #define MAXRADIUS 5 //maximum trailer radius before assuming straight
 #define STEERSTRAIGHT 0.1 //percent steering input corresponding to switch to infinite radius
 
