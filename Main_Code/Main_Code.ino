@@ -1,7 +1,4 @@
-#include "AngleSensor.hpp"
-#include "UserInput.hpp"
 #include "Car.hpp"
-#include "Trailer.hpp"
 #include "Functions.h"
 
 //***Setup all the hardware*********
